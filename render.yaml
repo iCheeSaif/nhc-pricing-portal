@@ -1,0 +1,24 @@
+# Deploy as a Render Blueprint. Paid web instance and disk are intentional:
+# this application uses a SQLite file and needs persistent data storage.
+services:
+  - type: web
+    name: pricing-portal-demo
+    runtime: docker
+    region: frankfurt
+    plan: 0.5c-512mb
+    healthCheckPath: /api/health
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: INITIAL_ADMIN_PASSWORD
+        sync: false
+      - key: PRICING_DB
+        value: /app/data/pricing.sqlite3
+      - key: PORT
+        value: "8000"
+    disk:
+      name: pricing-data
+      mountPath: /app/data
+      sizeGB: 1
